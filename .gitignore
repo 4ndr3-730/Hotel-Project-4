@@ -21,3 +21,4 @@
 
 /.vscode/
 /public/uploads/
+.DS_Store
