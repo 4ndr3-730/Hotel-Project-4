@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Tableau de bord | Hotel
+{% endblock %}
+
+{% block body %}
+    <h1 class = "text-center mt-4">Tableau de bord</h1>
+	<div class="row">
+		<div class="col-11 mx-auto my-4">
+			<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Membres</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Slider</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Chambres</button>
+				</li>
+                <li class="nav-item" role="presentation">
+					<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Commandes</button>
+				</li>
+{# 
+                <li class="ms-auto nav-item" role="presentation">
+                    <a class="btn btn-success" href="{{ path('create_product') }} "><i class="bi bi-plus-circle"></i>Ajouter un produit</a>
+                </li> #}
+			</ul>
+			<div class="tab-content" id="pills-tabContent">
+
+{#///////////////////////////// TABLE Membres ////////////////////////////#}
+				<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Rôle</th>
+                                <th>Mot de passe</th>
+                                <th>Prenom</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Civilité</th>
+                                <th>Option</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for membre in membres %}
+                                <tr class="text-center align-middle">
+                                    <td>{{ membre.id }}</td>
+                                    <td>{{ membre.roles }}</td>
+                                    <td>{{ membre.password }}</td>
+                                    <td>{{ membre.prenom }}</td>
+                                    <td>{{ membre.nom }}</td>
+                                    <td>{{ membre.civilite }}</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-info" href="{{ path('update_membre',{'id':membre.id}) }}"  title="Modifier"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ path('soft_delete_membre', {'id': membre.id}) }}" class="btn btn-sm btn-info" title="Archiver" onclick="return confirm('Cette action archivera les informations de ce membre. Voulez-vous continuer?')"><i class="bi bi-trash3"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {# ------------------------------------------------------
+                Il manque les input pour enregistrer des nouveaux membres 
+                ------------------------------------------------------ #}
+                </div>
+            
+{#////////////////////////////////////// TABLE SLIDER //////////////////////////////////////////#}
+            	<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Photo</th>
+                                <th>Ordre</th>
+                                <th>Date Enregistrement</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for slider in sliders %}
+                                <tr class="text-center align-middle">
+                                    <td>{{ slider.id }}</td>
+                                    <td>{{ slider.photo }}</td>
+                                    <td>{{ slider.ordre }}</td>
+                                    <td>{{ slider.createdAt | date('d/m/Y') }}</td>
+                                {# --------Actions-------------------------------
+                                Il manque le  bouton "Explorer dans mes fichiers" 
+                                ------------------------------------------------#}
+                                    <td>
+                                        <a class="btn btn-sm btn-info" href="{{ path('update_slider',{'id':slider.id}) }}"  title="Modifier"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ path('soft_delete_slider', {'id': slider.id}) }}" class="btn btn-sm btn-info" title="Archiver" onclick="return confirm('Cette action archivera les informations. Voulez-vous continuer?')"><i class="bi bi-trash3"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+{#/////////////////////////// TABLE CHAMBRES //////////////////////////#}
+				<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Titre</th>
+                                <th>Description:courte</th>
+                                <th>Description longue</th>
+                                <th>Photo</th>
+                                <th>Prix</th>
+                                <th>Date enregistrement</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chambre in chambres %}
+                                <tr class="text-center align-middle">
+                                    <td>{{ chambre.id }}</td>
+                                    <td>{{ chambre.titre | capitalize }}</td>
+                                    <td>{{ chambre.DescriptionCourte }}</td>
+                                    <td>{{ chambre.DescriptionLongue| length > 25 ? chambre.DescriptionLongue | slice(0,25) ~ '...' : chambre.DescriptionLongue }}</td>
+                                    <td><img src="{{ asset('uploads/' ~ chambre.photo ) }}" alt="{{ chambre.titre }}" width="150" height"150" class="img-custom"></td>
+                                    <td>{{ chambre.PrixJournalier }} € </td>
+                                    <td>{{ chambre.createdAt | date('d/m/Y') }}</td>
+                                    <td>
+                                        {# ------------------------------------------
+                                        Manque l'action "Explorer dans mes fichiers" 
+                                        ---------------------------------------------#}
+                                        <a class="btn btn-sm btn-info" href="{{ path('update_chambre',{'id':chambre.id}) }}"  title="Modifier la chambre"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ path('soft_delete_chambre', {'id': chambre.id}) }}" class="btn btn-sm btn-info" title="Archiver le chambre" onclick="return confirm('Cette action archivera la chambre. Voulez-vous continuer?')"><i class="bi bi-trash3"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+{#/////////////////////////// TABLE COMMANDES //////////////////////////////////#}
+<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+    <div class="row my-3">
+        <div class="col-10 mx-auto">
+            <table class="table">
+                <thead>
+                <tr class="text-center">
+                    <th>Commande</th>
+                    <th>Chambre</th>
+                    <th>date_arrivee</th>
+                    <th>date_depart</th>
+                    <th>prix_total</th>
+                    <th>prenom</th>
+                    <th>nom</th>
+                    <th>telephone</th>
+                    <th>email</th>
+                    <th>date et heure d'enregistrement</th>
+                    <th>actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {# je ne comprends pas le for #}
+                    {% for item in app.session.get('panier') %}
+
+                        <tr class="align-middle text-center">
+                            <td>{{ item['product'].title }}</td>
+                            <td>{{ item['quantity'] }}</td>
+                            <td>{{ item['product'].price }}</td>
+                            <td>{{ item['product'].price * item['quantity'] }}</td>
+                            <td>
+                                <a herf="{{ path('delete_item', {'id': item['product'].id}) }}" title="Supprimer le produit du panier" class="btn btn-sm btn-danger"><i class="bi bi-x-circle"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center bg-warning">Votre panier est vide</td>
+                        </tr>
+                    {% endfor %}
+        
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4" class="align-middle text-center">Montant total : </td>
+                    <td class="align-middle text-center">{{ total }} €</td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <div class="row">
+                <a href="{{ path('delete_panier') }}" class="btn btn-danger col-6 text-center">Vider mon panier</a>
+                <a href="{{ path('validate_commande') }}" class="btn btn-success col-6 text-center">Valider mon panier</a>
+            </div>
+
+        </div>
+    </div>
+                </div>
+            {#/////////// TABLE COMMANDES //////////#}
+			</div>
+		</div>
+	</div>
+{% endblock %}
