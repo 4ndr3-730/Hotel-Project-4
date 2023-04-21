@@ -5,9 +5,6 @@ namespace App\Repository;
 use App\Entity\Membre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<Membre>
@@ -17,7 +14,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method Membre[]    findAll()
  * @method Membre[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MembreRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class MembreRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -40,20 +37,6 @@ class MembreRepository extends ServiceEntityRepository implements PasswordUpgrad
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
-    {
-        if (!$user instanceof Membre) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
-        }
-
-        $user->setPassword($newHashedPassword);
-
-        $this->save($user, true);
     }
 
 //    /**

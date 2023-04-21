@@ -5,27 +5,22 @@ namespace App\Entity;
 use App\Repository\MembreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
-class Membre implements UserInterface, PasswordAuthenticatedUserInterface
+class Membre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180)]
     private ?string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column(length: 80)]
@@ -38,13 +33,13 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $civilite = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $CreatedAt = null;
+    private ?\DateTimeInterface $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $UpdatedAt = null;
+    private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $DeletedAt = null;
+    private ?\DateTimeInterface $deleted_at = null;
 
     public function getId(): ?int
     {
@@ -63,26 +58,9 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -92,10 +70,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -105,15 +80,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public function getPrenom(): ?string
@@ -154,36 +120,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->CreatedAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $CreatedAt): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->CreatedAt = $CreatedAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->UpdatedAt;
+        return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $UpdatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
-        $this->UpdatedAt = $UpdatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
     public function getDeletedAt(): ?\DateTimeInterface
     {
-        return $this->DeletedAt;
+        return $this->deleted_at;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $DeletedAt): self
+    public function setDeletedAt(?\DateTimeInterface $deleted_at): self
     {
-        $this->DeletedAt = $DeletedAt;
+        $this->deleted_at = $deleted_at;
 
         return $this;
     }
